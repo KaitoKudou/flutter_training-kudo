@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CommonTextButtonWidget extends StatelessWidget {
-  const CommonTextButtonWidget({
+class CommonTextButton extends StatelessWidget {
+  const CommonTextButton({
     required VoidCallback onClosePressed,
     required VoidCallback onReloadPressed,
     super.key,

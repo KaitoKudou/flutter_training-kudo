@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/common_temperature_text_widget.dart';
-import 'package:flutter_training/common_text_button_widget.dart';
+import 'package:flutter_training/common_temperature_text.dart';
+import 'package:flutter_training/common_text_button.dart';
 
 class WeatherForecastView extends StatelessWidget {
   const WeatherForecastView({super.key});
@@ -22,7 +22,7 @@ class WeatherForecastView extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              const CommonTemperatureTextWidget(
+              const CommonTemperatureText(
                 minTemperatureText: '** ℃',
                 maxTemperatureText: '** ℃',
               ),
@@ -34,7 +34,7 @@ class WeatherForecastView extends StatelessWidget {
                   children: [
                     const SizedBox(height: 80),
 
-                    CommonTextButtonWidget(
+                    CommonTextButton(
                         onClosePressed: () { },
                         onReloadPressed: () { },
                     ),

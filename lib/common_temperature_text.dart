@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CommonTemperatureTextWidget extends StatelessWidget {
-  const CommonTemperatureTextWidget({
+class CommonTemperatureText extends StatelessWidget {
+  const CommonTemperatureText({
     required String minTemperatureText,
     required String maxTemperatureText,
     super.key,
