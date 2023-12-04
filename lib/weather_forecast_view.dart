@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/common_temperature_text.dart';
 import 'package:flutter_training/common_text_button.dart';
+import 'package:flutter_training/model/weather_forecast.dart';
+import 'package:flutter_training/model/weather_service.dart';
+import 'package:flutter_training/weather_image.dart';
 
-class WeatherForecastView extends StatelessWidget {
+class WeatherForecastView extends StatefulWidget {
   const WeatherForecastView({super.key});
 
   @override
+  State<WeatherForecastView> createState() => _WeatherForecastViewState();
+}
+
+class _WeatherForecastViewState extends State<WeatherForecastView> {
+  WeatherCondition? _weatherCondition;
+
+  @override
   Widget build(BuildContext context) {
+    final weatherService = WeatherService();
+
     return Scaffold(
       body: Center(
         child: FractionallySizedBox(
@@ -14,10 +26,7 @@ class WeatherForecastView extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(),
-              const AspectRatio(
-                aspectRatio: 1,
-                child: Placeholder(),
-              ),
+              WeatherImage(path: _weatherCondition?.path),
               const SizedBox(height: 16),
               const CommonTemperatureText(
                 minTemperatureText: '** ℃',
@@ -30,7 +39,11 @@ class WeatherForecastView extends StatelessWidget {
                     const SizedBox(height: 80),
                     CommonTextButton(
                       onClosePressed: () {},
-                      onReloadPressed: () {},
+                      onReloadPressed: () {
+                        setState(() {
+                          _weatherCondition = weatherService.fetchWeather();
+                        });
+                      },
                     ),
                   ],
                 ),
