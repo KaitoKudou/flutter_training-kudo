@@ -15,7 +15,7 @@ class WeatherForecastView extends StatelessWidget {
             children: [
               const Spacer(),
               const AspectRatio(
-                aspectRatio: 1 / 1,
+                aspectRatio: 1,
                 child: Placeholder(),
               ),
               const SizedBox(height: 16),
