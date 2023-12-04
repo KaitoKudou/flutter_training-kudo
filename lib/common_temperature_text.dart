@@ -5,7 +5,7 @@ class CommonTemperatureText extends StatelessWidget {
     required String minTemperatureText,
     required String maxTemperatureText,
     super.key,
-  }) : _minTemperatureText = minTemperatureText,
+  })  : _minTemperatureText = minTemperatureText,
         _maxTemperatureText = maxTemperatureText;
 
   final String _minTemperatureText;
@@ -26,7 +26,6 @@ class CommonTemperatureText extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-
         Expanded(
           child: Text(
             _maxTemperatureText,

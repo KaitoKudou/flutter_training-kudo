@@ -5,7 +5,8 @@ class CommonTextButton extends StatelessWidget {
     required VoidCallback onClosePressed,
     required VoidCallback onReloadPressed,
     super.key,
-  }): _onClosePressed = onClosePressed, _onReloadPressed = onReloadPressed;
+  })  : _onClosePressed = onClosePressed,
+        _onReloadPressed = onReloadPressed;
 
   final VoidCallback _onClosePressed;
   final VoidCallback _onReloadPressed;
@@ -20,7 +21,6 @@ class CommonTextButton extends StatelessWidget {
             child: const Text('Close'),
           ),
         ),
-
         Expanded(
           child: TextButton(
             onPressed: _onReloadPressed,

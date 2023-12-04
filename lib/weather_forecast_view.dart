@@ -14,29 +14,23 @@ class WeatherForecastView extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(),
-
               const AspectRatio(
                 aspectRatio: 1 / 1,
                 child: Placeholder(),
               ),
-
               const SizedBox(height: 16),
-
               const CommonTemperatureText(
                 minTemperatureText: '** ℃',
                 maxTemperatureText: '** ℃',
               ),
-
               const SizedBox(height: 16),
-
               Flexible(
                 child: Column(
                   children: [
                     const SizedBox(height: 80),
-
                     CommonTextButton(
-                        onClosePressed: () { },
-                        onReloadPressed: () { },
+                      onClosePressed: () {},
+                      onReloadPressed: () {},
                     ),
                   ],
                 ),
