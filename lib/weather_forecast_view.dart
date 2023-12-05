@@ -30,7 +30,7 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
           child: Column(
             children: [
               const Spacer(),
-              WeatherImage(path: _weatherCondition?.path),
+              WeatherImage(weatherCondition: _weatherCondition),
               const SizedBox(height: 16),
               const CommonTemperatureText(
                 minTemperatureText: '** ℃',
