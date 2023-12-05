@@ -1,20 +1,14 @@
-import 'package:flutter_training/model/weather_forecast.dart';
+import 'package:flutter_training/model/weather_condition.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
 class WeatherService {
-  WeatherCondition fetchWeather() {
-    final client = YumemiWeather();
-    final condition = client.fetchSimpleWeather();
+  WeatherService(YumemiWeather client) : _client = client;
 
-    switch (condition) {
-      case 'sunny':
-        return WeatherCondition.sunny;
-      case 'cloudy':
-        return WeatherCondition.cloudy;
-      case 'rainy':
-        return WeatherCondition.rainy;
-      default:
-        throw Exception('Unexpected weather condition: $condition');
-    }
+  final YumemiWeather _client;
+
+  WeatherCondition fetchWeather() {
+    final condition = _client.fetchSimpleWeather();
+
+    return WeatherCondition.from(condition);
   }
 }
