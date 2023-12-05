@@ -1,11 +1,7 @@
-import 'package:flutter_training-kudo/gen/assets.gen.dart';
-
 enum WeatherCondition {
-  sunny(path: 'images/sunny.svg'),
-  cloudy(path: 'images/cloudy.svg'),
-  rainy(path: 'images/rainy.svg');
-
-  const WeatherCondition({required this.path});
+  sunny,
+  cloudy,
+  rainy;
 
   factory WeatherCondition.from(String path) {
     return WeatherCondition.values.singleWhere(
@@ -13,6 +9,4 @@ enum WeatherCondition {
       orElse: () => throw Exception('Unexpected weather condition: $path'),
     );
   }
-
-  final String path;
 }
