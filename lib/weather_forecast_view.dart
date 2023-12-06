@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_training/common_temperature_text.dart';
 import 'package:flutter_training/common_text_button.dart';
 import 'package:flutter_training/model/weather_condition.dart';
-import 'package:flutter_training/model/weather_service.dart';
+import 'package:flutter_training/service/weather_service.dart';
 import 'package:flutter_training/weather_image.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
