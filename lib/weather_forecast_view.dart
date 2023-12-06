@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/common_temperature_text.dart';
 import 'package:flutter_training/common_text_button.dart';
+import 'package:flutter_training/model/weather_condition.dart';
+import 'package:flutter_training/service/weather_service.dart';
+import 'package:flutter_training/weather_image.dart';
+import 'package:yumemi_weather/yumemi_weather.dart';
 
-class WeatherForecastView extends StatelessWidget {
-  const WeatherForecastView({super.key});
+final _client = YumemiWeather();
+final _weatherService = WeatherService(_client);
+
+class WeatherForecastView extends StatefulWidget {
+  const WeatherForecastView({
+    super.key,
+  });
+
+  @override
+  State<WeatherForecastView> createState() => _WeatherForecastViewState();
+}
+
+class _WeatherForecastViewState extends State<WeatherForecastView> {
+  WeatherCondition? _weatherCondition;
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +30,7 @@ class WeatherForecastView extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(),
-              const AspectRatio(
-                aspectRatio: 1,
-                child: Placeholder(),
-              ),
+              WeatherImage(weatherCondition: _weatherCondition),
               const SizedBox(height: 16),
               const CommonTemperatureText(
                 minTemperatureText: '** ℃',
@@ -30,7 +43,11 @@ class WeatherForecastView extends StatelessWidget {
                     const SizedBox(height: 80),
                     CommonTextButton(
                       onClosePressed: () {},
-                      onReloadPressed: () {},
+                      onReloadPressed: () {
+                        setState(() {
+                          _weatherCondition = _weatherService.fetchWeather();
+                        });
+                      },
                     ),
                   ],
                 ),
