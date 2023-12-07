@@ -42,7 +42,9 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                   children: [
                     const SizedBox(height: 80),
                     CommonTextButton(
-                      onClosePressed: () {},
+                      onClosePressed: () {
+                        Navigator.pop(context);
+                      },
                       onReloadPressed: () {
                         setState(() {
                           _weatherCondition = _weatherService.fetchWeather();
