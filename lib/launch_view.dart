@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_training/screen.dart';
+import 'package:flutter_training/transition_mixin.dart';
 
 class LaunchView extends StatefulWidget {
   const LaunchView({super.key});
@@ -11,10 +11,8 @@ class LaunchView extends StatefulWidget {
   State<LaunchView> createState() => _LaunchViewState();
 }
 
-class _LaunchViewState extends State<LaunchView> {
-  Future<void> transition() async {
-    await SchedulerBinding.instance.endOfFrame;
-
+class _LaunchViewState extends State<LaunchView> with EndOfScreenDrawingMixin {
+  Future<void> toWeatherForecastView() async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
     if (!context.mounted) {
@@ -23,17 +21,16 @@ class _LaunchViewState extends State<LaunchView> {
 
     await Navigator.pushNamed(context, Screen.weatherForecast.route);
 
-    unawaited(transition());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(transition());
+    unawaited(toWeatherForecastView());
   }
 
   @override
   Widget build(BuildContext context) {
     return const ColoredBox(color: Colors.green);
+  }
+
+  @override
+  void endOfScreenDrawing() {
+    unawaited(toWeatherForecastView());
   }
 }
