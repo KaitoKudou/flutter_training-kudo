@@ -34,9 +34,6 @@ class _LaunchViewState extends State<LaunchView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.green,
-      body: Container(),
-    );
+    return const ColoredBox(color: Colors.green);
   }
 }
