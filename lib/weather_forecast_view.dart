@@ -42,7 +42,7 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                   children: [
                     const SizedBox(height: 80),
                     CommonTextButton(
-                      onClosePressed: () async {
+                      onClosePressed: () {
                         Navigator.pop(context);
                       },
                       onReloadPressed: () {
