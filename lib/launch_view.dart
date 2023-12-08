@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_training/end_of_screen_drawing_mixin.dart';
 import 'package:flutter_training/screen.dart';
-import 'package:flutter_training/transition_mixin.dart';
 
 class LaunchView extends StatefulWidget {
   const LaunchView({super.key});
