@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_training/model/weather_condition.dart';
 import 'package:flutter_training/service/weather_service.dart';
@@ -20,6 +22,23 @@ class WeatherForecastView extends StatefulWidget {
 
 class _WeatherForecastViewState extends State<WeatherForecastView> {
   WeatherCondition? _weatherCondition;
+
+  Future<void> _showErrorExceptionDialog(String exceptionMessage) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(exceptionMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +65,18 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                         Navigator.pop(context);
                       },
                       onReloadPressed: () {
-                        setState(() {
-                          _weatherCondition = _weatherService.fetchWeather();
-                        });
+                        switch (_weatherService.fetchWeather()) {
+                          case Success(value: final value):
+                            setState(() {
+                              _weatherCondition = value;
+                            });
+                          case Failure(
+                              exceptionMessage: final exceptionMessage
+                            ):
+                            unawaited(
+                              _showErrorExceptionDialog(exceptionMessage),
+                            );
+                        }
                       },
                     ),
                   ],
