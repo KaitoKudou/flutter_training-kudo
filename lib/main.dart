@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/launch_view.dart';
 import 'package:flutter_training/screen.dart';
-import 'package:flutter_training/weather_forecast_view.dart';
+import 'package:flutter_training/view/launch_view.dart';
+import 'package:flutter_training/view/weather_forecast_view.dart';
 
 void main() {
   runApp(const MainApp());
