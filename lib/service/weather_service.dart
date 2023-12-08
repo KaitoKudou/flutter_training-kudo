@@ -6,9 +6,31 @@ class WeatherService {
 
   final YumemiWeather _client;
 
-  WeatherCondition fetchWeather() {
-    final condition = _client.fetchSimpleWeather();
-
-    return WeatherCondition.from(condition);
+  Result fetchWeather() {
+    try {
+      final condition = _client.fetchThrowsWeather('tokyo');
+      return Success(WeatherCondition.from(condition));
+    } on YumemiWeatherError catch (e) {
+      return Failure(e.toExceptionMessage);
+    }
   }
+}
+
+sealed class Result {}
+
+class Success implements Result {
+  const Success(this.value);
+  final WeatherCondition value;
+}
+
+class Failure implements Result {
+  const Failure(this.exceptionMessage);
+  final String exceptionMessage;
+}
+
+extension YumemiWeatherErrorException on YumemiWeatherError {
+  String get toExceptionMessage => switch (this) {
+        YumemiWeatherError.invalidParameter => '無効なパラメータが入力されました',
+        YumemiWeatherError.unknown => '不明なエラーです',
+      };
 }
