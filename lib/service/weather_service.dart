@@ -1,4 +1,7 @@
-import 'package:flutter_training/model/weather_condition.dart';
+import 'dart:convert';
+
+import 'package:flutter_training/model/weather_request.dart';
+import 'package:flutter_training/model/weather_response.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
 class WeatherService {
@@ -6,10 +9,11 @@ class WeatherService {
 
   final YumemiWeather _client;
 
-  Result<WeatherCondition, String> fetchWeather() {
+  Result<WeatherResponse, String> fetchWeather(WeatherRequest request) {
     try {
-      final condition = _client.fetchThrowsWeather('tokyo');
-      return Success(WeatherCondition.from(condition));
+      final jsonString = jsonEncode(request.toJson());
+      final condition = _client.fetchWeather(jsonString);
+      return Success(WeatherResponse.fromJson(condition));
     } on YumemiWeatherError catch (e) {
       return Failure(e.toExceptionMessage);
     } on Exception catch (_) {
