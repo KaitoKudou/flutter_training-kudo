@@ -23,7 +23,7 @@ class WeatherForecastView extends StatefulWidget {
 class _WeatherForecastViewState extends State<WeatherForecastView> {
   WeatherCondition? _weatherCondition;
 
-  Future<void> _showErrorExceptionDialog(String exceptionMessage) {
+  Future<void> _showErrorDialog(String exceptionMessage) {
     return showDialog<void>(
       context: context,
       builder: (context) {
@@ -74,7 +74,7 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                               exceptionMessage: final exceptionMessage
                             ):
                             unawaited(
-                              _showErrorExceptionDialog(exceptionMessage),
+                              _showErrorDialog(exceptionMessage),
                             );
                         }
                       },
