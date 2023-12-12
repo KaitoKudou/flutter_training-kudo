@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_training/model/weather_data.dart';
 import 'package:flutter_training/model/weather_request.dart';
-import 'package:flutter_training/model/weather_response.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
 class WeatherService {
@@ -9,11 +9,13 @@ class WeatherService {
 
   final YumemiWeather _client;
 
-  Result<WeatherResponse, String> fetchWeather(WeatherRequest request) {
+  Result<WeatherData, String> fetchWeather(WeatherRequest request) {
     try {
-      final jsonString = jsonEncode(request.toJson());
-      final condition = _client.fetchWeather(jsonString);
-      return Success(WeatherResponse.fromJson(condition));
+      final jsonString = jsonEncode(request);
+      final weatherData = _client.fetchWeather(jsonString);
+      return Success(WeatherData.fromJson(weatherData));
+    } on FormatException catch (_) {
+      return const Failure('不適切なデータを受け取りました');
     } on YumemiWeatherError catch (e) {
       return Failure(e.toExceptionMessage);
     } on Exception catch (_) {
