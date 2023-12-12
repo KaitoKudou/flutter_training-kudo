@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_training/model/weather_data.dart';
 import 'package:flutter_training/model/weather_request.dart';
-import 'package:flutter_training/model/weather_response.dart';
 import 'package:flutter_training/service/weather_service.dart';
 import 'package:flutter_training/view/component/common_temperature_text.dart';
 import 'package:flutter_training/view/component/common_text_button.dart';
@@ -22,7 +22,7 @@ class WeatherForecastView extends StatefulWidget {
 }
 
 class _WeatherForecastViewState extends State<WeatherForecastView> {
-  WeatherResponse? _weatherResponse;
+  WeatherData? _weatherData;
 
   Future<void> _showErrorDialog(String exceptionMessage) {
     return showDialog<void>(
@@ -51,12 +51,12 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
             children: [
               const Spacer(),
               WeatherImage(
-                weatherCondition: _weatherResponse?.weatherCondition,
+                weatherCondition: _weatherData?.weatherCondition,
               ),
               const SizedBox(height: 16),
               CommonTemperatureText(
-                minTemperatureText: _weatherResponse?.minTemperature.toString(),
-                maxTemperatureText: _weatherResponse?.maxTemperature.toString(),
+                minTemperature: _weatherData?.minTemperature,
+                maxTemperature: _weatherData?.maxTemperature,
               ),
               const SizedBox(height: 16),
               Flexible(
@@ -73,7 +73,7 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                         )) {
                           case Success(value: final value):
                             setState(() {
-                              _weatherResponse = value;
+                              _weatherData = value;
                             });
                           case Failure(
                               exceptionMessage: final exceptionMessage
