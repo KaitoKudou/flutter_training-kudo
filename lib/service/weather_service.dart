@@ -11,8 +11,9 @@ class WeatherService {
 
   Result<WeatherData, String> fetchWeather(WeatherRequest request) {
     try {
-      final jsonString = jsonEncode(request);
-      final weatherData = _client.fetchWeather(jsonString);
+      final requestJson = jsonEncode(request);
+      final responseJson = _client.fetchWeather(requestJson);
+      final weatherData = jsonDecode(responseJson) as Map<String, dynamic>;
       return Success(WeatherData.fromJson(weatherData));
     } on FormatException catch (_) {
       return const Failure('不適切なデータを受け取りました');
