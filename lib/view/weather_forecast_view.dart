@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_training/model/weather_condition.dart';
+import 'package:flutter_training/model/weather_data.dart';
+import 'package:flutter_training/model/weather_request.dart';
 import 'package:flutter_training/service/weather_service.dart';
 import 'package:flutter_training/view/component/common_temperature_text.dart';
 import 'package:flutter_training/view/component/common_text_button.dart';
@@ -21,7 +22,7 @@ class WeatherForecastView extends StatefulWidget {
 }
 
 class _WeatherForecastViewState extends State<WeatherForecastView> {
-  WeatherCondition? _weatherCondition;
+  WeatherData? _weatherData;
 
   Future<void> _showErrorDialog(String exceptionMessage) {
     return showDialog<void>(
@@ -49,11 +50,13 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
           child: Column(
             children: [
               const Spacer(),
-              WeatherImage(weatherCondition: _weatherCondition),
+              WeatherImage(
+                weatherCondition: _weatherData?.weatherCondition,
+              ),
               const SizedBox(height: 16),
-              const CommonTemperatureText(
-                minTemperatureText: '** ℃',
-                maxTemperatureText: '** ℃',
+              CommonTemperatureText(
+                minTemperature: _weatherData?.minTemperature,
+                maxTemperature: _weatherData?.maxTemperature,
               ),
               const SizedBox(height: 16),
               Flexible(
@@ -65,10 +68,12 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                         Navigator.pop(context);
                       },
                       onReloadPressed: () {
-                        switch (_weatherService.fetchWeather()) {
+                        switch (_weatherService.fetchWeather(
+                          WeatherRequest(area: 'tokyo', date: DateTime.now()),
+                        )) {
                           case Success(value: final value):
                             setState(() {
-                              _weatherCondition = value;
+                              _weatherData = value;
                             });
                           case Failure(
                               exceptionMessage: final exceptionMessage

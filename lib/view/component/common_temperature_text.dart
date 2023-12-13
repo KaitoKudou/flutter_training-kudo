@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class CommonTemperatureText extends StatelessWidget {
   const CommonTemperatureText({
-    required String minTemperatureText,
-    required String maxTemperatureText,
+    required int? minTemperature,
+    required int? maxTemperature,
     super.key,
-  })  : _minTemperatureText = minTemperatureText,
-        _maxTemperatureText = maxTemperatureText;
+  })  : _minTemperature = minTemperature,
+        _maxTemperature = maxTemperature;
 
-  final String _minTemperatureText;
-  final String _maxTemperatureText;
+  final int? _minTemperature;
+  final int? _maxTemperature;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CommonTemperatureText extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            _minTemperatureText,
+            _minTemperature == null ? '**℃' : '$_minTemperature℃',
             style: textTheme.labelLarge!.copyWith(
               color: Colors.blue,
             ),
@@ -28,7 +28,7 @@ class CommonTemperatureText extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            _maxTemperatureText,
+            _maxTemperature == null ? '**℃' : '$_maxTemperature℃',
             style: textTheme.labelLarge!.copyWith(
               color: Colors.red,
             ),
