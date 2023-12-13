@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_training/model/weather_condition.dart';
 
 class WeatherData {
@@ -9,15 +7,14 @@ class WeatherData {
     required this.minTemperature,
   });
 
-  factory WeatherData.fromJson(String jsonString) {
-    final decoded = jsonDecode(jsonString) as Map<String, dynamic>;
+  factory WeatherData.fromJson(Map<String, dynamic> json) {
     final weatherCondition =
-        WeatherCondition.from(decoded['weather_condition'].toString());
+        WeatherCondition.from(json['weather_condition'].toString());
     final maxTemperature = int.parse(
-      decoded['max_temperature'].toString(),
+      json['max_temperature'].toString(),
     );
     final minTemperature = int.parse(
-      decoded['min_temperature'].toString(),
+      json['min_temperature'].toString(),
     );
 
     return WeatherData(
