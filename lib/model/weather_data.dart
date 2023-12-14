@@ -1,30 +1,17 @@
 import 'package:flutter_training/model/weather_condition.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class WeatherData {
-  const WeatherData({
-    required this.weatherCondition,
-    required this.maxTemperature,
-    required this.minTemperature,
-  });
+part 'weather_data.freezed.dart';
+part 'weather_data.g.dart';
 
-  factory WeatherData.fromJson(Map<String, dynamic> json) {
-    final weatherCondition =
-        WeatherCondition.from(json['weather_condition'].toString());
-    final maxTemperature = int.parse(
-      json['max_temperature'].toString(),
-    );
-    final minTemperature = int.parse(
-      json['min_temperature'].toString(),
-    );
+@freezed
+class WeatherData with _$WeatherData {
+  const factory WeatherData({
+    required WeatherCondition weatherCondition,
+    required int maxTemperature,
+    required int minTemperature,
+  }) = _WeatherData;
 
-    return WeatherData(
-      weatherCondition: weatherCondition,
-      maxTemperature: maxTemperature,
-      minTemperature: minTemperature,
-    );
-  }
-
-  final WeatherCondition weatherCondition;
-  final int maxTemperature;
-  final int minTemperature;
+  factory WeatherData.fromJson(Map<String, dynamic> json) =>
+      _$WeatherDataFromJson(json);
 }
