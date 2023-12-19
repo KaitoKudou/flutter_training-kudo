@@ -278,6 +278,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.2"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      sha256: da9591d1f8d5881628ccd5c25c40e74fc3eef50ba45e40c3905a06e1712412d5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.9"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -484,7 +492,7 @@ packages:
     source: hosted
     version: "1.2.3"
   riverpod:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: riverpod
       sha256: "942999ee48b899f8a46a860f1e13cee36f2f77609eb54c5b7a669bb20d550b11"
@@ -500,7 +508,7 @@ packages:
     source: hosted
     version: "0.5.0"
   riverpod_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: riverpod_annotation
       sha256: b70e95fbd5ca7ce42f5148092022971bb2e9843b6ab71e97d479e8ab52e98979
@@ -508,7 +516,7 @@ packages:
     source: hosted
     version: "2.3.3"
   riverpod_generator:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: riverpod_generator
       sha256: ff8f064f1d7ef3cc6af481bba8e9a3fcdb4d34df34fac1b39bbc003167065be0
@@ -516,7 +524,7 @@ packages:
     source: hosted
     version: "2.3.9"
   riverpod_lint:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: riverpod_lint
       sha256: "944929ef82c9bfeaa455ccab97920abcf847a0ffed5c9f6babc520a95db25176"
