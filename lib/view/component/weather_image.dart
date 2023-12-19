@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_training/gen/assets.gen.dart';
 import 'package:flutter_training/model/weather_condition.dart';
+import 'package:flutter_training/notifier/weather_forecast_view_state.dart';
 
-class WeatherImage extends StatelessWidget {
+class WeatherImage extends ConsumerWidget {
   const WeatherImage({
-    required WeatherCondition? weatherCondition,
     super.key,
-  }) : _weatherCondition = weatherCondition;
-
-  final WeatherCondition? _weatherCondition;
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final weatherCondition = ref.watch(
+      weatherForecastViewStateProvider
+          .select((weatherData) => weatherData?.weatherCondition),
+    );
+
     return AspectRatio(
       aspectRatio: 1,
-      child: _weatherCondition == null
+      child: weatherCondition == null
           ? const Placeholder()
-          : _weatherCondition.svgImage,
+          : weatherCondition.svgImage,
     );
   }
 }

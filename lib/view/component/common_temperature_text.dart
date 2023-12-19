@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_training/notifier/weather_forecast_view_state.dart';
 
-class CommonTemperatureText extends StatelessWidget {
+class CommonTemperatureText extends ConsumerWidget {
   const CommonTemperatureText({
-    required int? minTemperature,
-    required int? maxTemperature,
     super.key,
-  })  : _minTemperature = minTemperature,
-        _maxTemperature = maxTemperature;
-
-  final int? _minTemperature;
-  final int? _maxTemperature;
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final minTemperature = ref.watch(
+      weatherForecastViewStateProvider
+          .select((weatherData) => weatherData?.minTemperature),
+    );
+    final maxTemperature = ref.watch(
+      weatherForecastViewStateProvider
+          .select((weatherData) => weatherData?.maxTemperature),
+    );
 
     return Row(
       children: [
         Expanded(
           child: Text(
-            _minTemperature == null ? '**℃' : '$_minTemperature℃',
+            minTemperature == null ? '**℃' : '$minTemperature℃',
             style: textTheme.labelLarge!.copyWith(
               color: Colors.blue,
             ),
@@ -28,7 +32,7 @@ class CommonTemperatureText extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            _maxTemperature == null ? '**℃' : '$_maxTemperature℃',
+            maxTemperature == null ? '**℃' : '$maxTemperature℃',
             style: textTheme.labelLarge!.copyWith(
               color: Colors.red,
             ),

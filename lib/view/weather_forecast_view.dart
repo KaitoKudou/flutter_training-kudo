@@ -1,48 +1,37 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_training/model/weather_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_training/model/weather_request.dart';
-import 'package:flutter_training/service/weather_service.dart';
+import 'package:flutter_training/notifier/weather_forecast_view_state.dart';
 import 'package:flutter_training/view/component/common_temperature_text.dart';
 import 'package:flutter_training/view/component/common_text_button.dart';
 import 'package:flutter_training/view/component/weather_image.dart';
-import 'package:yumemi_weather/yumemi_weather.dart';
 
-final _client = YumemiWeather();
-final _weatherService = WeatherService(_client);
-
-class WeatherForecastView extends StatefulWidget {
+class WeatherForecastView extends ConsumerWidget {
   const WeatherForecastView({
     super.key,
   });
 
   @override
-  State<WeatherForecastView> createState() => _WeatherForecastViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future<void> showErrorDialog(String exceptionMessage) async {
+      return showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(exceptionMessage),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
 
-class _WeatherForecastViewState extends State<WeatherForecastView> {
-  WeatherData? _weatherData;
-
-  Future<void> _showErrorDialog(String exceptionMessage) {
-    return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Text(exceptionMessage),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: FractionallySizedBox(
@@ -50,14 +39,9 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
           child: Column(
             children: [
               const Spacer(),
-              WeatherImage(
-                weatherCondition: _weatherData?.weatherCondition,
-              ),
+              const WeatherImage(),
               const SizedBox(height: 16),
-              CommonTemperatureText(
-                minTemperature: _weatherData?.minTemperature,
-                maxTemperature: _weatherData?.maxTemperature,
-              ),
+              const CommonTemperatureText(),
               const SizedBox(height: 16),
               Flexible(
                 child: Column(
@@ -68,20 +52,17 @@ class _WeatherForecastViewState extends State<WeatherForecastView> {
                         Navigator.pop(context);
                       },
                       onReloadPressed: () {
-                        switch (_weatherService.fetchWeather(
-                          WeatherRequest(area: 'tokyo', date: DateTime.now()),
-                        )) {
-                          case Success(value: final value):
-                            setState(() {
-                              _weatherData = value;
-                            });
-                          case Failure(
-                              exceptionMessage: final exceptionMessage
-                            ):
-                            unawaited(
-                              _showErrorDialog(exceptionMessage),
-                            );
-                        }
+                        ref
+                            .read(weatherForecastViewStateProvider.notifier)
+                            .fetchWeather(
+                          WeatherRequest(
+                            area: 'tokyo',
+                            date: DateTime.now(),
+                          ),
+                          (exceptionMessage) {
+                            unawaited(showErrorDialog(exceptionMessage));
+                          },
+                        );
                       },
                     ),
                   ],
