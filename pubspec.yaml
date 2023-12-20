@@ -28,9 +28,9 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.4.5
   json_serializable: ^6.7.1
-  yumemi_lints: ^1.1.0
   riverpod_generator: ^2.3.9
   riverpod_lint: ^2.3.7
+  yumemi_lints: ^1.1.0
 
 flutter_gen:
   integrations:
