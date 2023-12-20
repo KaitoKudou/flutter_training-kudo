@@ -9,21 +9,24 @@ part of 'weather_forecast_view_state.dart';
 // **************************************************************************
 
 String _$weatherForecastViewStateHash() =>
-    r'22a26dd91b2ee2bbb85a4ccbf59e19c70bdc3bfb';
+    r'c3f23bb1fc4c47f8db34b95484dfed55d3e3c54e';
 
 /// See also [WeatherForecastViewState].
 @ProviderFor(WeatherForecastViewState)
-final weatherForecastViewStateProvider = AutoDisposeNotifierProvider<
-    WeatherForecastViewState, WeatherData?>.internal(
+final weatherForecastViewStateProvider =
+    NotifierProvider<WeatherForecastViewState, WeatherData?>.internal(
   WeatherForecastViewState.new,
   name: r'weatherForecastViewStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$weatherForecastViewStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[weatherServiceProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    weatherServiceProvider,
+    ...?weatherServiceProvider.allTransitiveDependencies
+  },
 );
 
-typedef _$WeatherForecastViewState = AutoDisposeNotifier<WeatherData?>;
+typedef _$WeatherForecastViewState = Notifier<WeatherData?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
