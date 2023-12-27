@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'weather_forecast_view_state.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [weatherService])
+@Riverpod(dependencies: [weatherService])
 class WeatherForecastViewState extends _$WeatherForecastViewState {
   // buildではUI側に渡したい型を初期化する
   @override
