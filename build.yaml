@@ -5,6 +5,12 @@ targets:
         options:
           ignore_for_file:
             - type=lint
+            - duplicate_ignore
+      riverpod_generator:
+        generate_for:
+          include:
+            - lib/notifier/*.dart
+            - lib/provider/*.dart
       freezed:
         generate_for:
           include:
