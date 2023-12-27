@@ -22,3 +22,8 @@ targets:
         options:
           field_rename: snake
           checked: true
+      mockito:
+        generate_for:
+          include:
+            - test/notifier/*.dart
+            - test/service/*.dart
