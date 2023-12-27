@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CommonTextButton extends ConsumerWidget {
+class CommonTextButton extends StatelessWidget {
   const CommonTextButton({
     required VoidCallback onClosePressed,
     required VoidCallback onReloadPressed,
@@ -13,7 +12,7 @@ class CommonTextButton extends ConsumerWidget {
   final VoidCallback _onReloadPressed;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
