@@ -19,7 +19,7 @@ void main() {
   late WeatherRequest request;
 
   group('Weather Service Tests', () {
-    setUpAll(() {
+    setUp(() {
       // Common Arrange
       mockYumemiWeather = MockYumemiWeather();
       container = ProviderContainer(
@@ -31,7 +31,7 @@ void main() {
       );
     });
 
-    tearDownAll(() {
+    tearDown(() {
       addTearDown(container.dispose);
     });
 
@@ -52,7 +52,7 @@ void main() {
           container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
-      expectSuccessResult(
+      _expectSuccessResult(
         actual,
         const WeatherData(
           weatherCondition: WeatherCondition.cloudy,
@@ -72,7 +72,7 @@ void main() {
           container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
-      expectFailureResult(actual, '不明なエラーです');
+      _expectFailureResult(actual, '不明なエラーです');
     });
 
     test('天気情報の取得に失敗した場合(YumemiWeatherError.invalidParameter)', () {
@@ -85,7 +85,7 @@ void main() {
           container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
-      expectFailureResult(actual, '無効なパラメータが入力されました');
+      _expectFailureResult(actual, '無効なパラメータが入力されました');
     });
 
     test('天気情報の取得に失敗した場合(CheckedFromJsonException)', () {
@@ -105,12 +105,12 @@ void main() {
           container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
-      expectFailureResult(actual, '不適切なデータを受け取りました');
+      _expectFailureResult(actual, '不適切なデータを受け取りました');
     });
   });
 }
 
-void expectSuccessResult(
+void _expectSuccessResult(
   Result<WeatherData, String> actual,
   WeatherData expectedValue,
 ) {
@@ -124,7 +124,7 @@ void expectSuccessResult(
   );
 }
 
-void expectFailureResult(
+void _expectFailureResult(
   Result<WeatherData, String> actual,
   String expectedExceptionMessage,
 ) {

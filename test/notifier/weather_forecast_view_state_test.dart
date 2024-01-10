@@ -16,6 +16,7 @@ void main() {
   late MockYumemiWeather mockYumemiWeather;
   late ProviderContainer container;
   late WeatherRequest request;
+  String? exceptionMessage;
 
   group('Weather Forecast View State Tests', () {
     setUp(() {
@@ -28,6 +29,7 @@ void main() {
         area: 'tokyo',
         date: DateTime.now(),
       );
+      exceptionMessage = null;
     });
 
     tearDown(() {
@@ -54,7 +56,7 @@ void main() {
       // Act
       final initialState = container.read(weatherForecastViewStateProvider);
       final actualState =
-          fetchWeatherAndReturnState(container, request: request);
+          _fetchWeatherAndReturnState(container, request: request);
 
       // Assert
       expect(initialState, null);
@@ -67,16 +69,18 @@ void main() {
           .thenThrow(YumemiWeatherError.unknown);
 
       // Act
-      expectExceptionMessage(
-        container,
-        request: request,
-        expectedExceptionMessage: '不明なエラーです',
+      expect(exceptionMessage, null);
+      container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
+        request,
+        (error) {
+          exceptionMessage = error;
+        },
       );
-      final actualState =
-          fetchWeatherAndReturnState(container, request: request);
+      final state = _fetchWeatherAndReturnState(container, request: request);
+      expect(state, null);
 
       // Assert
-      expect(actualState, null);
+      expect(exceptionMessage, '不明なエラーです');
     });
 
     test('stateの更新に失敗した場合(YumemiWeatherError.invalidParameter)', () {
@@ -85,16 +89,18 @@ void main() {
           .thenThrow(YumemiWeatherError.invalidParameter);
 
       // Act
-      expectExceptionMessage(
-        container,
-        request: request,
-        expectedExceptionMessage: '無効なパラメータが入力されました',
+      expect(exceptionMessage, null);
+      container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
+        request,
+        (error) {
+          exceptionMessage = error;
+        },
       );
-      final actualState =
-          fetchWeatherAndReturnState(container, request: request);
+      final state = _fetchWeatherAndReturnState(container, request: request);
+      expect(state, null);
 
       // Assert
-      expect(actualState, null);
+      expect(exceptionMessage, '無効なパラメータが入力されました');
     });
 
     test('stateの更新に失敗した場合(CheckedFromJsonException)', () {
@@ -107,26 +113,26 @@ void main() {
        }
       ''';
       when(mockYumemiWeather.fetchWeather(any))
-          .thenThrow(YumemiWeatherError.invalidParameter);
-      when(mockYumemiWeather.fetchWeather(any))
           .thenReturn(expectedResponseJson);
 
       // Act
-      expectExceptionMessage(
-        container,
-        request: request,
-        expectedExceptionMessage: '不適切なデータを受け取りました',
+      expect(exceptionMessage, null);
+      container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
+        request,
+        (error) {
+          exceptionMessage = error;
+        },
       );
-      final actualState =
-          fetchWeatherAndReturnState(container, request: request);
+      final state = _fetchWeatherAndReturnState(container, request: request);
+      expect(state, null);
 
       // Assert
-      expect(actualState, null);
+      expect(exceptionMessage, '不適切なデータを受け取りました');
     });
   });
 }
 
-WeatherData? fetchWeatherAndReturnState(
+WeatherData? _fetchWeatherAndReturnState(
   ProviderContainer container, {
   required WeatherRequest request,
 }) {
@@ -135,20 +141,4 @@ WeatherData? fetchWeatherAndReturnState(
         (_) {},
       );
   return container.read(weatherForecastViewStateProvider);
-}
-
-void expectExceptionMessage(
-  ProviderContainer container, {
-  required WeatherRequest request,
-  required String expectedExceptionMessage,
-}) {
-  String? exceptionMessage;
-  expect(exceptionMessage, null);
-  container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
-    request,
-    (error) {
-      exceptionMessage = error;
-    },
-  );
-  expect(exceptionMessage, expectedExceptionMessage);
 }
