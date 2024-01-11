@@ -11,6 +11,7 @@ class CommonTextButton extends StatelessWidget {
   final VoidCallback _onClosePressed;
   final VoidCallback _onReloadPressed;
   static final reloadButton = UniqueKey();
+  static final closeButton = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class CommonTextButton extends StatelessWidget {
       children: [
         Expanded(
           child: TextButton(
+            key: closeButton,
             onPressed: _onClosePressed,
             child: const Text('Close'),
           ),
