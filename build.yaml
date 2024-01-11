@@ -27,3 +27,4 @@ targets:
           include:
             - test/notifier/*.dart
             - test/service/*.dart
+            - test/view/*.dart
