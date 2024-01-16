@@ -29,10 +29,10 @@ class WeatherImage extends ConsumerWidget {
 extension WeatherSvgImage on WeatherCondition {
   SvgPicture get svgImage => switch (this) {
         WeatherCondition.sunny =>
-          Assets.images.sunny.svg(semanticsLabel: 'sunny image'),
-        WeatherCondition.cloudy =>
-          Assets.images.cloudy.svg(semanticsLabel: 'cloudy image'),
+          Assets.images.sunny.svg(semanticsLabel: WeatherCondition.sunny.name),
+        WeatherCondition.cloudy => Assets.images.cloudy
+            .svg(semanticsLabel: WeatherCondition.cloudy.name),
         WeatherCondition.rainy =>
-          Assets.images.rainy.svg(semanticsLabel: 'rainy image'),
+          Assets.images.rainy.svg(semanticsLabel: WeatherCondition.rainy.name),
       };
 }
