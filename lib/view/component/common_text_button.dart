@@ -10,7 +10,10 @@ class CommonTextButton extends StatelessWidget {
 
   final VoidCallback _onClosePressed;
   final VoidCallback _onReloadPressed;
+
+  @visibleForTesting
   static final reloadButton = UniqueKey();
+  @visibleForTesting
   static final closeButton = UniqueKey();
 
   @override
