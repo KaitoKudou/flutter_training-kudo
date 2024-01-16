@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/main.dart';
+import 'package:flutter_training/model/weather_condition.dart';
 import 'package:flutter_training/provider/yumemi_weather_provider.dart';
 import 'package:flutter_training/view/component/common_text_button.dart';
 import 'package:flutter_training/view/launch_view.dart';
@@ -35,7 +36,7 @@ void main() {
     mockYumemiWeather = MockYumemiWeather();
   });
 
-  testWidgets('天気予報画面に晴れの画像が表示される', (widgetTester) async {
+  testWidgets('天気情報(晴れ)の取得に成功した時に晴れの画像が表示される', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
@@ -56,11 +57,11 @@ void main() {
     await widgetTester.pump();
 
     // Assert
-    final actual = find.bySemanticsLabel('sunny image');
+    final actual = find.bySemanticsLabel(WeatherCondition.sunny.name);
     expect(actual, findsOneWidget);
   });
 
-  testWidgets('天気予報画面に曇りの画像が表示される', (widgetTester) async {
+  testWidgets('天気情報(曇り)の取得に成功した時に曇りの画像が表示される', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
@@ -88,11 +89,11 @@ void main() {
     await widgetTester.pump();
 
     // Assert
-    final actual = find.bySemanticsLabel('cloudy image');
+    final actual = find.bySemanticsLabel(WeatherCondition.cloudy.name);
     expect(actual, findsOneWidget);
   });
 
-  testWidgets('天気予報画面に雨の画像が表示される', (widgetTester) async {
+  testWidgets('天気情報(雨)の取得に成功した時に雨の画像が表示される', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
@@ -120,11 +121,11 @@ void main() {
     await widgetTester.pump();
 
     // Assert
-    final actual = find.bySemanticsLabel('rainy image');
+    final actual = find.bySemanticsLabel(WeatherCondition.rainy.name);
     expect(actual, findsOneWidget);
   });
 
-  testWidgets('天気予報画面に最高気温が表示される', (widgetTester) async {
+  testWidgets('天気情報の取得に成功した時に最高気温が表示される', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
@@ -149,7 +150,7 @@ void main() {
     expect(actual, findsOneWidget);
   });
 
-  testWidgets('天気予報画面に最低気温が表示される', (widgetTester) async {
+  testWidgets('天気情報の取得に成功した時に最低気温が表示される', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
@@ -174,7 +175,7 @@ void main() {
     expect(actual, findsOneWidget);
   });
 
-  testWidgets('天気予報画面にダイアログが表示され、特定のメッセージが表示されること', (widgetTester) async {
+  testWidgets('天天気情報の取得に失敗した時にエラーダイアログが表示される', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
