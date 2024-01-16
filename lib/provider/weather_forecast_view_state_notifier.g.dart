@@ -2,24 +2,24 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'weather_forecast_view_state.dart';
+part of 'weather_forecast_view_state_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$weatherForecastViewStateHash() =>
-    r'553d42d80e4ef218f88cfe621233cb643c86da20';
+String _$weatherForecastViewStateNotifierHash() =>
+    r'a7230a5ab15b8fbd4121239e32316e9fdaf155d2';
 
-/// See also [WeatherForecastViewState].
-@ProviderFor(WeatherForecastViewState)
-final weatherForecastViewStateProvider = AutoDisposeNotifierProvider<
-    WeatherForecastViewState, WeatherData?>.internal(
-  WeatherForecastViewState.new,
-  name: r'weatherForecastViewStateProvider',
+/// See also [WeatherForecastViewStateNotifier].
+@ProviderFor(WeatherForecastViewStateNotifier)
+final weatherForecastViewStateNotifierProvider = AutoDisposeNotifierProvider<
+    WeatherForecastViewStateNotifier, WeatherForecastViewState>.internal(
+  WeatherForecastViewStateNotifier.new,
+  name: r'weatherForecastViewStateNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$weatherForecastViewStateHash,
+      : _$weatherForecastViewStateNotifierHash,
   dependencies: <ProviderOrFamily>[weatherServiceProvider],
   allTransitiveDependencies: <ProviderOrFamily>{
     weatherServiceProvider,
@@ -27,6 +27,7 @@ final weatherForecastViewStateProvider = AutoDisposeNotifierProvider<
   },
 );
 
-typedef _$WeatherForecastViewState = AutoDisposeNotifier<WeatherData?>;
+typedef _$WeatherForecastViewStateNotifier
+    = AutoDisposeNotifier<WeatherForecastViewState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

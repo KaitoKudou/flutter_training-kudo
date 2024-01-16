@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_training/model/weather_data.dart';
 import 'package:flutter_training/model/weather_request.dart';
+import 'package:flutter_training/service/result.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
@@ -10,10 +12,14 @@ class WeatherService {
 
   final YumemiWeather _client;
 
-  Result<WeatherData, String> fetchWeather(WeatherRequest request) {
+  /// [YumemiWeather.syncFetchWeather]は内部で同期処理を行っているため、メインスレッドがブロックされる
+  /// [compute]を使って、別isolateで処理を行うようにし、メインスレッドのブロックを防ぐ
+  Future<Result<WeatherData, String>> fetchWeather(
+    WeatherRequest request,
+  ) async {
     try {
       final requestJson = jsonEncode(request);
-      final responseJson = _client.fetchWeather(requestJson);
+      final responseJson = await compute(_client.syncFetchWeather, requestJson);
       final weatherData = jsonDecode(responseJson) as Map<String, dynamic>;
       return Success(WeatherData.fromJson(weatherData));
     } on CheckedFromJsonException catch (_) {
@@ -24,18 +30,6 @@ class WeatherService {
       return const Failure('例外エラーが発生しました');
     }
   }
-}
-
-sealed class Result<S, E> {}
-
-class Success<S, E> implements Result<S, E> {
-  const Success(this.value);
-  final S value;
-}
-
-class Failure<S, E> implements Result<S, E> {
-  const Failure(this.exceptionMessage);
-  final E exceptionMessage;
 }
 
 extension YumemiWeatherErrorException on YumemiWeatherError {
