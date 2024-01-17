@@ -9,7 +9,7 @@ part of 'weather_forecast_view_state_notifier.dart';
 // **************************************************************************
 
 String _$weatherForecastViewStateNotifierHash() =>
-    r'a7230a5ab15b8fbd4121239e32316e9fdaf155d2';
+    r'30d3ef04c9119f883b15af9cc22be55b8da349d3';
 
 /// See also [WeatherForecastViewStateNotifier].
 @ProviderFor(WeatherForecastViewStateNotifier)
@@ -20,11 +20,8 @@ final weatherForecastViewStateNotifierProvider = AutoDisposeNotifierProvider<
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$weatherForecastViewStateNotifierHash,
-  dependencies: <ProviderOrFamily>[weatherServiceProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    weatherServiceProvider,
-    ...?weatherServiceProvider.allTransitiveDependencies
-  },
+  dependencies: null,
+  allTransitiveDependencies: null,
 );
 
 typedef _$WeatherForecastViewStateNotifier
