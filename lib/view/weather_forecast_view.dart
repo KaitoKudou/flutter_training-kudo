@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_training/model/weather_request.dart';
-import 'package:flutter_training/notifier/weather_forecast_view_state.dart';
+import 'package:flutter_training/provider/weather_forecast_view_state_notifier.dart';
 import 'package:flutter_training/view/component/common_temperature_text.dart';
 import 'package:flutter_training/view/component/common_text_button.dart';
 import 'package:flutter_training/view/component/weather_image.dart';
@@ -32,6 +32,34 @@ class WeatherForecastView extends ConsumerWidget {
       );
     }
 
+    Future<void> showLoadingDialog() async {
+      return showDialog<void>(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+    }
+
+    ref.listen(weatherForecastViewStateNotifierProvider, (previous, next) {
+      unawaited(
+        next.maybeWhen(
+          loading: showLoadingDialog,
+          failure: (exceptionMessage) {
+            Navigator.pop(context);
+            showErrorDialog(exceptionMessage);
+            return null;
+          },
+          orElse: () {
+            Navigator.pop(context);
+            return null;
+          },
+        ),
+      );
+    });
+
     return Scaffold(
       body: Center(
         child: FractionallySizedBox(
@@ -52,16 +80,18 @@ class WeatherForecastView extends ConsumerWidget {
                         Navigator.pop(context);
                       },
                       onReloadPressed: () {
-                        ref
-                            .read(weatherForecastViewStateProvider.notifier)
-                            .fetchWeather(
-                          WeatherRequest(
-                            area: 'tokyo',
-                            date: DateTime.now(),
-                          ),
-                          (exceptionMessage) {
-                            unawaited(showErrorDialog(exceptionMessage));
-                          },
+                        unawaited(
+                          ref
+                              .read(
+                                weatherForecastViewStateNotifierProvider
+                                    .notifier,
+                              )
+                              .fetchWeather(
+                                WeatherRequest(
+                                  area: 'tokyo',
+                                  date: DateTime.now(),
+                                ),
+                              ),
                         );
                       },
                     ),
