@@ -18,6 +18,7 @@ class WeatherForecastView extends ConsumerWidget {
     Future<void> showErrorDialog(String exceptionMessage) async {
       return showDialog<void>(
         context: context,
+        barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
             content: Text(exceptionMessage),
@@ -35,6 +36,7 @@ class WeatherForecastView extends ConsumerWidget {
     Future<void> showLoadingDialog() async {
       return showDialog<void>(
         context: context,
+        barrierDismissible: false,
         builder: (context) {
           return const Center(
             child: CircularProgressIndicator(),
