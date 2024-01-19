@@ -5,7 +5,7 @@ import 'package:flutter_training/model/weather_data.dart';
 import 'package:flutter_training/model/weather_request.dart';
 import 'package:flutter_training/provider/weather_service_provider.dart';
 import 'package:flutter_training/provider/yumemi_weather_provider.dart';
-import 'package:flutter_training/service/weather_service.dart';
+import 'package:flutter_training/service/result.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
@@ -35,7 +35,7 @@ void main() {
       addTearDown(container.dispose);
     });
 
-    test('天気情報の取得に成功した場合', () {
+    test('天気情報の取得に成功した場合', () async {
       // Arrange
       const expectedResponseJson = '''
       {
@@ -44,12 +44,12 @@ void main() {
         "min_temperature":7
        }
       ''';
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenReturn(expectedResponseJson);
 
       // Act
       final actual =
-          container.read(weatherServiceProvider).fetchWeather(request);
+          await container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
       _expectSuccessResult(
@@ -62,33 +62,33 @@ void main() {
       );
     });
 
-    test('天気情報の取得に失敗した場合(YumemiWeatherError.unknown)', () {
+    test('天気情報の取得に失敗した場合(YumemiWeatherError.unknown)', () async {
       // Arrange
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenThrow(YumemiWeatherError.unknown);
 
       // Act
       final actual =
-          container.read(weatherServiceProvider).fetchWeather(request);
+          await container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
       _expectFailureResult(actual, '不明なエラーです');
     });
 
-    test('天気情報の取得に失敗した場合(YumemiWeatherError.invalidParameter)', () {
+    test('天気情報の取得に失敗した場合(YumemiWeatherError.invalidParameter)', () async {
       // Arrange
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenThrow(YumemiWeatherError.invalidParameter);
 
       // Act
       final actual =
-          container.read(weatherServiceProvider).fetchWeather(request);
+          await container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
       _expectFailureResult(actual, '無効なパラメータが入力されました');
     });
 
-    test('天気情報の取得に失敗した場合(CheckedFromJsonException)', () {
+    test('天気情報の取得に失敗した場合(CheckedFromJsonException)', () async {
       // Arrange
       const expectedResponseJson = '''
       {
@@ -97,12 +97,12 @@ void main() {
         "min_temperature":7
        }
       ''';
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenReturn(expectedResponseJson);
 
       // Act
       final actual =
-          container.read(weatherServiceProvider).fetchWeather(request);
+          await container.read(weatherServiceProvider).fetchWeather(request);
 
       // Assert
       _expectFailureResult(actual, '不適切なデータを受け取りました');
