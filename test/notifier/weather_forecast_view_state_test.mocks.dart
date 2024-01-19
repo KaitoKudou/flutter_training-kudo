@@ -3,9 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:flutter_training/view/weather/weather_forecast_view_state.dart'
+    as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i3;
-import 'package:yumemi_weather/src/yumemi_weather_base.dart' as _i2;
+import 'package:yumemi_weather/yumemi_weather.dart' as _i2;
+
+import 'weather_forecast_view_state_test.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -111,4 +115,25 @@ class MockYumemiWeather extends _i1.Mock implements _i2.YumemiWeather {
           ),
         ),
       ) as String);
+}
+
+/// A class which mocks [Listener].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockListener extends _i1.Mock implements _i4.Listener {
+  @override
+  void call(
+    _i5.WeatherForecastViewState? previous,
+    _i5.WeatherForecastViewState? next,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [
+            previous,
+            next,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

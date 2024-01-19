@@ -3,40 +3,50 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/model/weather_condition.dart';
 import 'package:flutter_training/model/weather_data.dart';
 import 'package:flutter_training/model/weather_request.dart';
-import 'package:flutter_training/notifier/weather_forecast_view_state.dart';
+import 'package:flutter_training/provider/weather_forecast_view_state_notifier.dart';
 import 'package:flutter_training/provider/yumemi_weather_provider.dart';
+import 'package:flutter_training/view/weather/weather_forecast_view_state.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
 import 'weather_forecast_view_state_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<YumemiWeather>()])
+abstract class Listener {
+  void call(WeatherForecastViewState? previous, WeatherForecastViewState next);
+}
+
+@GenerateNiceMocks([MockSpec<YumemiWeather>(), MockSpec<Listener>()])
 void main() {
   late MockYumemiWeather mockYumemiWeather;
+  late MockListener mockListener;
   late ProviderContainer container;
   late WeatherRequest request;
-  String? exceptionMessage;
 
   group('Weather Forecast View State Tests', () {
     setUp(() {
       // Common Arrange
       mockYumemiWeather = MockYumemiWeather();
+      mockListener = MockListener();
       container = ProviderContainer(
         overrides: [yumemiWeatherProvider.overrideWithValue(mockYumemiWeather)],
+      );
+      container.listen<WeatherForecastViewState>(
+        weatherForecastViewStateNotifierProvider,
+        mockListener.call,
+        fireImmediately: true,
       );
       request = WeatherRequest(
         area: 'tokyo',
         date: DateTime.now(),
       );
-      exceptionMessage = null;
     });
 
     tearDown(() {
       addTearDown(container.dispose);
     });
 
-    test('stateの更新に成功した場合', () {
+    test('stateの更新に成功した場合', () async {
       // Arrange
       const expectedResponseJson = '''
       {
@@ -45,100 +55,89 @@ void main() {
         "min_temperature":7
        }
       ''';
-      const expectedState = WeatherData(
+      const expected = WeatherData(
         weatherCondition: WeatherCondition.cloudy,
         maxTemperature: 25,
         minTemperature: 7,
       );
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenReturn(expectedResponseJson);
 
       // Act
-      final initialState = container.read(weatherForecastViewStateProvider);
+      final initialState =
+          container.read(weatherForecastViewStateNotifierProvider);
       final actualState =
-          _fetchWeatherAndReturnState(container, request: request);
+          await _fetchWeatherAndReturnState(container, request: request);
 
       // Assert
-      expect(initialState, null);
-      expect(actualState, expectedState);
+      expect(initialState, const WeatherForecastViewState.initial());
+      expect(actualState, const WeatherForecastViewState.success(expected));
     });
 
-    test('stateの更新に失敗した場合(YumemiWeatherError.unknown)', () {
+    test('stateの更新に失敗した場合(YumemiWeatherError.unknown)', () async {
       // Arrange
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenThrow(YumemiWeatherError.unknown);
 
       // Act
-      expect(exceptionMessage, null);
-      container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
-        request,
-        (error) {
-          exceptionMessage = error;
-        },
-      );
-      final state = _fetchWeatherAndReturnState(container, request: request);
-      expect(state, null);
+      final actualState =
+          await _fetchWeatherAndReturnState(container, request: request);
 
       // Assert
-      expect(exceptionMessage, '不明なエラーです');
+      expect(
+        actualState,
+        const WeatherForecastViewState.failure('不明なエラーです'),
+      );
     });
 
-    test('stateの更新に失敗した場合(YumemiWeatherError.invalidParameter)', () {
+    test('stateの更新に失敗した場合(YumemiWeatherError.invalidParameter)', () async {
       // Arrange
-      when(mockYumemiWeather.fetchWeather(any))
+      when(mockYumemiWeather.syncFetchWeather(any))
           .thenThrow(YumemiWeatherError.invalidParameter);
 
       // Act
-      expect(exceptionMessage, null);
-      container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
-        request,
-        (error) {
-          exceptionMessage = error;
-        },
-      );
-      final state = _fetchWeatherAndReturnState(container, request: request);
-      expect(state, null);
+      final actualState =
+          await _fetchWeatherAndReturnState(container, request: request);
 
       // Assert
-      expect(exceptionMessage, '無効なパラメータが入力されました');
+      expect(
+        actualState,
+        const WeatherForecastViewState.failure('無効なパラメータが入力されました'),
+      );
     });
 
-    test('stateの更新に失敗した場合(CheckedFromJsonException)', () {
+    test('stateの更新に失敗した場合(CheckedFromJsonException)', () async {
       // Arrange
-      const expectedResponseJson = '''
+      const responseJson = '''
       {
         "weather_condition":"cloudy",
         "max_temperature":"25",
         "min_temperature":7
        }
       ''';
-      when(mockYumemiWeather.fetchWeather(any))
-          .thenReturn(expectedResponseJson);
+      when(mockYumemiWeather.fetchWeather(any)).thenReturn(responseJson);
 
       // Act
-      expect(exceptionMessage, null);
-      container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
-        request,
-        (error) {
-          exceptionMessage = error;
-        },
-      );
-      final state = _fetchWeatherAndReturnState(container, request: request);
-      expect(state, null);
+      final actualState =
+          await _fetchWeatherAndReturnState(container, request: request);
 
       // Assert
-      expect(exceptionMessage, '不適切なデータを受け取りました');
+      expect(
+        actualState,
+        const WeatherForecastViewState.failure('例外エラーが発生しました'),
+      );
     });
   });
 }
 
-WeatherData? _fetchWeatherAndReturnState(
+Future<WeatherForecastViewState> _fetchWeatherAndReturnState(
   ProviderContainer container, {
   required WeatherRequest request,
-}) {
-  container.read(weatherForecastViewStateProvider.notifier).fetchWeather(
+}) async {
+  await container
+      .read(weatherForecastViewStateNotifierProvider.notifier)
+      .fetchWeather(
         request,
-        (_) {},
       );
-  return container.read(weatherForecastViewStateProvider);
+  return container.read(weatherForecastViewStateNotifierProvider);
 }
