@@ -46,6 +46,36 @@ void main() {
       addTearDown(container.dispose);
     });
 
+    test('天気情報取得中にローディング状態になる', () async {
+      // Arrange
+      const expectedResponseJson = '''
+      {
+        "weather_condition":"cloudy",
+        "max_temperature":25,
+        "min_temperature":7
+       }
+      ''';
+      when(mockYumemiWeather.syncFetchWeather(any))
+          .thenReturn(expectedResponseJson);
+
+      // Act
+      await _fetchWeatherAndReturnState(container, request: request);
+
+      // Assert
+      verifyInOrder(
+        [
+          mockListener.call(
+            null,
+            const WeatherForecastViewState.initial(),
+          ),
+          mockListener.call(
+            const WeatherForecastViewState.initial(),
+            const WeatherForecastViewState.loading(),
+          ),
+        ],
+      );
+    });
+
     test('stateの更新に成功した場合', () async {
       // Arrange
       const expectedResponseJson = '''

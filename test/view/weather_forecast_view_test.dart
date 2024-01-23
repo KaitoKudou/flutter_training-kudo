@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,10 +40,11 @@ void main() {
     mockWeatherService = MockWeatherService();
   });
 
-  testWidgets('天気情報(晴れ)の取得に成功した時に晴れの画像が表示される', (widgetTester) async {
+  testWidgets('天気情報取得中にローディング画面になる', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -53,10 +56,41 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => defaultResponse);
+        .thenAnswer((_) async => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+
+    // Assert
+    final actual = find.byType(CircularProgressIndicator);
+    expect(actual, findsOneWidget);
+    completer.complete(defaultResponse);
+  });
+
+  testWidgets('天気予報画面に晴れの画像が表示される', (widgetTester) async {
+    await initializeDeviceSurfaceSize();
+
+    // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
+    await widgetTester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
+        ],
+        child: const MaterialApp(
+          home: WeatherForecastView(),
+        ),
+      ),
+    );
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) async => completer.future);
+
+    // Act
+    await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(defaultResponse);
     await widgetTester.pump();
 
     // Assert
@@ -68,6 +102,7 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -86,10 +121,13 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => response);
+        .thenAnswer((_) async => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(response);
     await widgetTester.pump();
 
     // Assert
@@ -101,6 +139,7 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -119,10 +158,13 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => response);
+        .thenAnswer((_) async => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(response);
     await widgetTester.pump();
 
     // Assert
@@ -134,6 +176,7 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -145,10 +188,13 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => defaultResponse);
+        .thenAnswer((_) async => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(defaultResponse);
     await widgetTester.pump();
 
     // Assert
@@ -160,6 +206,7 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -171,10 +218,13 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => defaultResponse);
+        .thenAnswer((_) async => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(defaultResponse);
     await widgetTester.pump();
 
     // Assert
@@ -186,6 +236,7 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -198,10 +249,13 @@ void main() {
     );
     const response = Result<WeatherData, String>.failure('不明なエラーです');
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => response);
+        .thenAnswer((_) async => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(response);
     await widgetTester.pump();
 
     // Assert
