@@ -12,14 +12,14 @@ import 'package:yumemi_weather/yumemi_weather.dart';
 
 import 'weather_forecast_view_state_test.mocks.dart';
 
-abstract class Listener {
-  void call(WeatherForecastViewState? previous, WeatherForecastViewState next);
+class Listener<T> extends Mock {
+  void call(T? previous, T value);
 }
 
-@GenerateNiceMocks([MockSpec<YumemiWeather>(), MockSpec<Listener>()])
+@GenerateNiceMocks([MockSpec<YumemiWeather>()])
 void main() {
   late MockYumemiWeather mockYumemiWeather;
-  late MockListener mockListener;
+  late Listener<WeatherForecastViewState> mockListener;
   late ProviderContainer container;
   late WeatherRequest request;
 
@@ -27,7 +27,7 @@ void main() {
     setUp(() {
       // Common Arrange
       mockYumemiWeather = MockYumemiWeather();
-      mockListener = MockListener();
+      mockListener = Listener();
       container = ProviderContainer(
         overrides: [yumemiWeatherProvider.overrideWithValue(mockYumemiWeather)],
       );
