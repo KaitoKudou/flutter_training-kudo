@@ -16,9 +16,7 @@ class CommonTemperatureText extends ConsumerWidget {
       children: [
         Expanded(
           child: Text(
-            weatherData?.minTemperature == null
-                ? '**℃'
-                : '${weatherData!.minTemperature}℃',
+            weatherData == null ? '**℃' : '${weatherData.minTemperature}℃',
             style: textTheme.labelLarge!.copyWith(
               color: Colors.blue,
             ),
@@ -27,9 +25,7 @@ class CommonTemperatureText extends ConsumerWidget {
         ),
         Expanded(
           child: Text(
-            weatherData?.maxTemperature == null
-                ? '**℃'
-                : '${weatherData!.maxTemperature}℃',
+            weatherData == null ? '**℃' : '${weatherData.maxTemperature}℃',
             style: textTheme.labelLarge!.copyWith(
               color: Colors.red,
             ),
