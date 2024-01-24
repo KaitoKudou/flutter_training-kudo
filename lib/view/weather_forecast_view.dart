@@ -37,7 +37,7 @@ class WeatherForecastView extends ConsumerWidget {
       return showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (context) {
+        builder: (_) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -45,9 +45,10 @@ class WeatherForecastView extends ConsumerWidget {
       );
     }
 
-    ref.listen(weatherForecastViewStateNotifierProvider, (previous, next) {
+    ref.listen(weatherForecastViewStateNotifierProvider,
+        (_, weatherForecastViewState) {
       unawaited(
-        next.maybeWhen(
+        weatherForecastViewState.maybeWhen(
           loading: showLoadingDialog,
           failure: (exceptionMessage) {
             Navigator.pop(context);
