@@ -3,9 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i4;
+
+import 'package:flutter_training/model/weather_data.dart' as _i5;
+import 'package:flutter_training/model/weather_request.dart' as _i6;
+import 'package:flutter_training/service/result.dart' as _i2;
+import 'package:flutter_training/service/weather_service.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i3;
-import 'package:yumemi_weather/src/yumemi_weather_base.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -20,95 +24,44 @@ import 'package:yumemi_weather/src/yumemi_weather_base.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-/// A class which mocks [YumemiWeather].
+class _FakeResult_0<S, E> extends _i1.SmartFake implements _i2.Result<S, E> {
+  _FakeResult_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [WeatherService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockYumemiWeather extends _i1.Mock implements _i2.YumemiWeather {
+class MockWeatherService extends _i1.Mock implements _i3.WeatherService {
   @override
-  String fetchSimpleWeather() => (super.noSuchMethod(
-        Invocation.method(
-          #fetchSimpleWeather,
-          [],
-        ),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.method(
-            #fetchSimpleWeather,
-            [],
-          ),
-        ),
-        returnValueForMissingStub: _i3.dummyValue<String>(
-          this,
-          Invocation.method(
-            #fetchSimpleWeather,
-            [],
-          ),
-        ),
-      ) as String);
-
-  @override
-  String fetchThrowsWeather(String? area) => (super.noSuchMethod(
-        Invocation.method(
-          #fetchThrowsWeather,
-          [area],
-        ),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.method(
-            #fetchThrowsWeather,
-            [area],
-          ),
-        ),
-        returnValueForMissingStub: _i3.dummyValue<String>(
-          this,
-          Invocation.method(
-            #fetchThrowsWeather,
-            [area],
-          ),
-        ),
-      ) as String);
-
-  @override
-  String fetchWeather(String? jsonString) => (super.noSuchMethod(
+  _i4.Future<_i2.Result<_i5.WeatherData, String>> fetchWeather(
+          _i6.WeatherRequest? request) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetchWeather,
-          [jsonString],
+          [request],
         ),
-        returnValue: _i3.dummyValue<String>(
+        returnValue: _i4.Future<_i2.Result<_i5.WeatherData, String>>.value(
+            _FakeResult_0<_i5.WeatherData, String>(
           this,
           Invocation.method(
             #fetchWeather,
-            [jsonString],
+            [request],
           ),
-        ),
-        returnValueForMissingStub: _i3.dummyValue<String>(
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.Result<_i5.WeatherData, String>>.value(
+                _FakeResult_0<_i5.WeatherData, String>(
           this,
           Invocation.method(
             #fetchWeather,
-            [jsonString],
+            [request],
           ),
-        ),
-      ) as String);
-
-  @override
-  String syncFetchWeather(String? jsonString) => (super.noSuchMethod(
-        Invocation.method(
-          #syncFetchWeather,
-          [jsonString],
-        ),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.method(
-            #syncFetchWeather,
-            [jsonString],
-          ),
-        ),
-        returnValueForMissingStub: _i3.dummyValue<String>(
-          this,
-          Invocation.method(
-            #syncFetchWeather,
-            [jsonString],
-          ),
-        ),
-      ) as String);
+        )),
+      ) as _i4.Future<_i2.Result<_i5.WeatherData, String>>);
 }

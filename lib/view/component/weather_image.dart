@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_training/gen/assets.gen.dart';
 import 'package:flutter_training/model/weather_condition.dart';
-import 'package:flutter_training/notifier/weather_forecast_view_state.dart';
+import 'package:flutter_training/provider/weather_data_state_notifier.dart';
 
 class WeatherImage extends ConsumerWidget {
   const WeatherImage({
@@ -12,16 +12,13 @@ class WeatherImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weatherCondition = ref.watch(
-      weatherForecastViewStateProvider
-          .select((weatherData) => weatherData?.weatherCondition),
-    );
+    final weatherData = ref.watch(weatherDataStateNotifierProvider);
 
     return AspectRatio(
       aspectRatio: 1,
-      child: weatherCondition == null
+      child: weatherData == null
           ? const Placeholder()
-          : weatherCondition.svgImage,
+          : weatherData.weatherCondition.svgImage,
     );
   }
 }

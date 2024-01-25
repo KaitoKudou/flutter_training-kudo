@@ -1,28 +1,32 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/main.dart';
 import 'package:flutter_training/model/weather_condition.dart';
-import 'package:flutter_training/provider/yumemi_weather_provider.dart';
+import 'package:flutter_training/model/weather_data.dart';
+import 'package:flutter_training/provider/weather_service_provider.dart';
+import 'package:flutter_training/service/result.dart';
+import 'package:flutter_training/service/weather_service.dart';
 import 'package:flutter_training/view/component/common_text_button.dart';
 import 'package:flutter_training/view/launch_view.dart';
 import 'package:flutter_training/view/weather_forecast_view.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:yumemi_weather/yumemi_weather.dart';
 
 import 'weather_forecast_view_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<YumemiWeather>()])
+@GenerateNiceMocks([MockSpec<WeatherService>()])
 void main() {
-  late MockYumemiWeather mockYumemiWeather;
-  const defaultResponse = '''
-      {
-        "weather_condition":"sunny",
-        "max_temperature":25,
-        "min_temperature":7
-       }
-      ''';
+  late MockWeatherService mockWeatherService;
+  const defaultResponse = Result<WeatherData, String>.success(
+    WeatherData(
+      weatherCondition: WeatherCondition.sunny,
+      maxTemperature: 25,
+      minTemperature: 7,
+    ),
+  );
 
   Future<void> initializeDeviceSurfaceSize() async {
     final binding = TestWidgetsFlutterBinding.ensureInitialized();
@@ -33,27 +37,60 @@ void main() {
 
   setUp(() {
     // Common Arrange
-    mockYumemiWeather = MockYumemiWeather();
+    mockWeatherService = MockWeatherService();
   });
 
-  testWidgets('天気情報(晴れ)の取得に成功した時に晴れの画像が表示される', (widgetTester) async {
+  testWidgets('天気情報取得中にローディング画面になる', (widgetTester) async {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
-          yumemiWeatherProvider.overrideWithValue(mockYumemiWeather),
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
         ],
         child: const MaterialApp(
           home: WeatherForecastView(),
         ),
       ),
     );
-    when(mockYumemiWeather.fetchWeather(any)).thenReturn(defaultResponse);
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+
+    // Assert
+    final actual = find.byType(CircularProgressIndicator);
+    expect(actual, findsOneWidget);
+    completer.complete(defaultResponse);
+  });
+
+  testWidgets('天気予報画面に晴れの画像が表示される', (widgetTester) async {
+    await initializeDeviceSurfaceSize();
+
+    // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
+    await widgetTester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
+        ],
+        child: const MaterialApp(
+          home: WeatherForecastView(),
+        ),
+      ),
+    );
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
+
+    // Act
+    await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(defaultResponse);
     await widgetTester.pump();
 
     // Assert
@@ -65,27 +102,32 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
-          yumemiWeatherProvider.overrideWithValue(mockYumemiWeather),
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
         ],
         child: const MaterialApp(
           home: WeatherForecastView(),
         ),
       ),
     );
-    const response = '''
-      {
-        "weather_condition":"cloudy",
-        "max_temperature":25,
-        "min_temperature":7
-       }
-      ''';
-    when(mockYumemiWeather.fetchWeather(any)).thenReturn(response);
+    const response = Result<WeatherData, String>.success(
+      WeatherData(
+        weatherCondition: WeatherCondition.cloudy,
+        maxTemperature: 25,
+        minTemperature: 7,
+      ),
+    );
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(response);
     await widgetTester.pump();
 
     // Assert
@@ -97,27 +139,32 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
-          yumemiWeatherProvider.overrideWithValue(mockYumemiWeather),
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
         ],
         child: const MaterialApp(
           home: WeatherForecastView(),
         ),
       ),
     );
-    const response = '''
-      {
-        "weather_condition":"rainy",
-        "max_temperature":25,
-        "min_temperature":7
-       }
-      ''';
-    when(mockYumemiWeather.fetchWeather(any)).thenReturn(response);
+    const response = Result<WeatherData, String>.success(
+      WeatherData(
+        weatherCondition: WeatherCondition.rainy,
+        maxTemperature: 25,
+        minTemperature: 7,
+      ),
+    );
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(response);
     await widgetTester.pump();
 
     // Assert
@@ -129,20 +176,25 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
-          yumemiWeatherProvider.overrideWithValue(mockYumemiWeather),
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
         ],
         child: const MaterialApp(
           home: WeatherForecastView(),
         ),
       ),
     );
-    when(mockYumemiWeather.fetchWeather(any)).thenReturn(defaultResponse);
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(defaultResponse);
     await widgetTester.pump();
 
     // Assert
@@ -154,20 +206,25 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
-          yumemiWeatherProvider.overrideWithValue(mockYumemiWeather),
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
         ],
         child: const MaterialApp(
           home: WeatherForecastView(),
         ),
       ),
     );
-    when(mockYumemiWeather.fetchWeather(any)).thenReturn(defaultResponse);
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(defaultResponse);
     await widgetTester.pump();
 
     // Assert
@@ -179,21 +236,26 @@ void main() {
     await initializeDeviceSurfaceSize();
 
     // Arrange
+    final completer = Completer<Result<WeatherData, String>>();
     await widgetTester.pumpWidget(
       ProviderScope(
         overrides: [
-          yumemiWeatherProvider.overrideWithValue(mockYumemiWeather),
+          weatherServiceProvider.overrideWithValue(mockWeatherService),
         ],
         child: const MaterialApp(
           home: WeatherForecastView(),
         ),
       ),
     );
-    when(mockYumemiWeather.fetchWeather(any))
-        .thenThrow(YumemiWeatherError.unknown);
+    const response = Result<WeatherData, String>.failure('不明なエラーです');
+    when(mockWeatherService.fetchWeather(any))
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
+    await widgetTester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    completer.complete(response);
     await widgetTester.pump();
 
     // Assert
