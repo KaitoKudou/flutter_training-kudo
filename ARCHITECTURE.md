@@ -43,14 +43,15 @@ flowchart TB
 
   weatherServiceProvider[["weatherServiceProvider"]];
   yumemiWeatherProvider[["yumemiWeatherProvider"]];
-  weatherForecastViewStateProvider[["weatherForecastViewStateProvider"]];
+  weatherForecastViewStateNotifierProvider[["weatherForecastViewStateNotifierProvider"]];
+  weatherDataStateNotifierProvider[["weatherDataStateNotifierProvider"]];
   WeatherForecastView((WeatherForecastView));
   WeatherImage((WeatherImage));
   CommonTemperatureText((CommonTemperatureText));
 
-  weatherForecastViewStateProvider -.-> WeatherForecastView;
-  weatherForecastViewStateProvider ==> WeatherImage;
-  weatherForecastViewStateProvider ==> CommonTemperatureText;
-  weatherForecastViewStateProvider ==> CommonTemperatureText;
+  weatherForecastViewStateNotifierProvider --> WeatherForecastView;
+  weatherForecastViewStateNotifierProvider -.-> WeatherForecastView;
+  weatherDataStateNotifierProvider ==> WeatherImage;
+  weatherDataStateNotifierProvider ==> CommonTemperatureText;
   yumemiWeatherProvider ==> weatherServiceProvider;
 ```
