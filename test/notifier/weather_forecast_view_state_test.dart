@@ -76,7 +76,8 @@ void main() {
       );
     });
 
-    test('stateの更新に成功した場合', () async {
+    test('天気情報の取得に成功したときWeatherForecastViewState.successにstateを更新をする',
+        () async {
       // Arrange
       const expectedResponseJson = '''
       {
@@ -104,7 +105,9 @@ void main() {
       expect(actualState, const WeatherForecastViewState.success(expected));
     });
 
-    test('stateの更新に失敗した場合(YumemiWeatherError.unknown)', () async {
+    test(
+        '天気情報の取得に失敗(YumemiWeatherError.unknown)したとき'
+        "WeatherForecastViewState.failure('不明なエラーです')にstateを更新をする", () async {
       // Arrange
       when(mockYumemiWeather.syncFetchWeather(any))
           .thenThrow(YumemiWeatherError.unknown);
@@ -120,7 +123,10 @@ void main() {
       );
     });
 
-    test('stateの更新に失敗した場合(YumemiWeatherError.invalidParameter)', () async {
+    test(
+        '天気情報の取得に失敗(YumemiWeatherError.invalidParameter)したとき'
+        "WeatherForecastViewState.failure('無効なパラメータが入力されました')にstateを更新をする",
+        () async {
       // Arrange
       when(mockYumemiWeather.syncFetchWeather(any))
           .thenThrow(YumemiWeatherError.invalidParameter);
@@ -136,7 +142,10 @@ void main() {
       );
     });
 
-    test('stateの更新に失敗した場合(CheckedFromJsonException)', () async {
+    test(
+        '天気情報の取得に失敗(CheckedFromJsonException)したとき'
+        "WeatherForecastViewState.failure('例外エラーが発生しました')にstateを更新をする",
+        () async {
       // Arrange
       const responseJson = '''
       {
