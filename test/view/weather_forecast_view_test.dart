@@ -56,7 +56,7 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
@@ -84,7 +84,7 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
@@ -121,7 +121,7 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
@@ -158,7 +158,7 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
@@ -188,7 +188,7 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
@@ -218,7 +218,7 @@ void main() {
       ),
     );
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
@@ -249,7 +249,7 @@ void main() {
     );
     const response = Result<WeatherData, String>.failure('不明なエラーです');
     when(mockWeatherService.fetchWeather(any))
-        .thenAnswer((_) async => completer.future);
+        .thenAnswer((_) => completer.future);
 
     // Act
     await widgetTester.tap(find.byKey(CommonTextButton.reloadButton));
