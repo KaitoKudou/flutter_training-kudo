@@ -18,100 +18,98 @@ void main() {
   late ProviderContainer container;
   late WeatherRequest request;
 
-  group('Weather Service Tests', () {
-    setUp(() {
-      // Common Arrange
-      mockYumemiWeather = MockYumemiWeather();
-      container = ProviderContainer(
-        overrides: [yumemiWeatherProvider.overrideWithValue(mockYumemiWeather)],
-      );
-      request = WeatherRequest(
-        area: 'tokyo',
-        date: DateTime.now(),
-      );
-    });
+  setUp(() {
+    // Common Arrange
+    mockYumemiWeather = MockYumemiWeather();
+    container = ProviderContainer(
+      overrides: [yumemiWeatherProvider.overrideWithValue(mockYumemiWeather)],
+    );
+    request = WeatherRequest(
+      area: 'tokyo',
+      date: DateTime.now(),
+    );
+  });
 
-    tearDown(() {
-      addTearDown(container.dispose);
-    });
+  tearDown(() {
+    addTearDown(container.dispose);
+  });
 
-    test('天気情報の取得に成功したときWeatherDataを更新する', () async {
-      // Arrange
-      const expectedResponseJson = '''
+  test('天気情報の取得に成功したときWeatherDataを更新する', () async {
+    // Arrange
+    const expectedResponseJson = '''
       {
         "weather_condition":"cloudy",
         "max_temperature":25,
         "min_temperature":7
        }
       ''';
-      when(mockYumemiWeather.syncFetchWeather(any))
-          .thenReturn(expectedResponseJson);
+    when(mockYumemiWeather.syncFetchWeather(any))
+        .thenReturn(expectedResponseJson);
 
-      // Act
-      final actual =
-          await container.read(weatherServiceProvider).fetchWeather(request);
+    // Act
+    final actual =
+        await container.read(weatherServiceProvider).fetchWeather(request);
 
-      // Assert
-      _expectSuccessResult(
-        actual,
-        const WeatherData(
-          weatherCondition: WeatherCondition.cloudy,
-          maxTemperature: 25,
-          minTemperature: 7,
-        ),
-      );
-    });
+    // Assert
+    _expectSuccessResult(
+      actual,
+      const WeatherData(
+        weatherCondition: WeatherCondition.cloudy,
+        maxTemperature: 25,
+        minTemperature: 7,
+      ),
+    );
+  });
 
-    test("天気情報の取得に失敗(YumemiWeatherError.unknown)したときエラーメッセージを'不明なエラーです'に変更する",
-        () async {
-      // Arrange
-      when(mockYumemiWeather.syncFetchWeather(any))
-          .thenThrow(YumemiWeatherError.unknown);
+  test("天気情報の取得に失敗(YumemiWeatherError.unknown)したときエラーメッセージを'不明なエラーです'に変更する",
+      () async {
+    // Arrange
+    when(mockYumemiWeather.syncFetchWeather(any))
+        .thenThrow(YumemiWeatherError.unknown);
 
-      // Act
-      final actual =
-          await container.read(weatherServiceProvider).fetchWeather(request);
+    // Act
+    final actual =
+        await container.read(weatherServiceProvider).fetchWeather(request);
 
-      // Assert
-      _expectFailureResult(actual, '不明なエラーです');
-    });
+    // Assert
+    _expectFailureResult(actual, '不明なエラーです');
+  });
 
-    test(
-        '天気情報の取得に失敗(YumemiWeatherError.invalidParameter)したとき'
-        "エラーメッセージを'無効なパラメータが入力されました'に変更する", () async {
-      // Arrange
-      when(mockYumemiWeather.syncFetchWeather(any))
-          .thenThrow(YumemiWeatherError.invalidParameter);
+  test(
+      '天気情報の取得に失敗(YumemiWeatherError.invalidParameter)したとき'
+      "エラーメッセージを'無効なパラメータが入力されました'に変更する", () async {
+    // Arrange
+    when(mockYumemiWeather.syncFetchWeather(any))
+        .thenThrow(YumemiWeatherError.invalidParameter);
 
-      // Act
-      final actual =
-          await container.read(weatherServiceProvider).fetchWeather(request);
+    // Act
+    final actual =
+        await container.read(weatherServiceProvider).fetchWeather(request);
 
-      // Assert
-      _expectFailureResult(actual, '無効なパラメータが入力されました');
-    });
+    // Assert
+    _expectFailureResult(actual, '無効なパラメータが入力されました');
+  });
 
-    test(
-        '天気情報の取得に失敗(CheckedFromJsonException)したとき'
-        "エラーメッセージを'不適切なデータを受け取りました'に変更する", () async {
-      // Arrange
-      const expectedResponseJson = '''
+  test(
+      '天気情報の取得に失敗(CheckedFromJsonException)したとき'
+      "エラーメッセージを'不適切なデータを受け取りました'に変更する", () async {
+    // Arrange
+    const expectedResponseJson = '''
       {
         "weather_condition":"cloudy",
         "max_temperature":"25",
         "min_temperature":7
        }
       ''';
-      when(mockYumemiWeather.syncFetchWeather(any))
-          .thenReturn(expectedResponseJson);
+    when(mockYumemiWeather.syncFetchWeather(any))
+        .thenReturn(expectedResponseJson);
 
-      // Act
-      final actual =
-          await container.read(weatherServiceProvider).fetchWeather(request);
+    // Act
+    final actual =
+        await container.read(weatherServiceProvider).fetchWeather(request);
 
-      // Assert
-      _expectFailureResult(actual, '不適切なデータを受け取りました');
-    });
+    // Assert
+    _expectFailureResult(actual, '不適切なデータを受け取りました');
   });
 }
 
