@@ -51,12 +51,14 @@ void main() {
         await container.read(weatherServiceProvider).fetchWeather(request);
 
     // Assert
-    _expectSuccessResult(
+    expect(
       actual,
-      const WeatherData(
-        weatherCondition: WeatherCondition.cloudy,
-        maxTemperature: 25,
-        minTemperature: 7,
+      const Result<WeatherData, String>.success(
+        WeatherData(
+          weatherCondition: WeatherCondition.cloudy,
+          maxTemperature: 25,
+          minTemperature: 7,
+        ),
       ),
     );
   });
@@ -72,7 +74,7 @@ void main() {
         await container.read(weatherServiceProvider).fetchWeather(request);
 
     // Assert
-    _expectFailureResult(actual, '不明なエラーです');
+    expect(actual, const Result<WeatherData, String>.failure('不明なエラーです'));
   });
 
   test(
@@ -87,7 +89,10 @@ void main() {
         await container.read(weatherServiceProvider).fetchWeather(request);
 
     // Assert
-    _expectFailureResult(actual, '無効なパラメータが入力されました');
+    expect(
+      actual,
+      const Result<WeatherData, String>.failure('無効なパラメータが入力されました'),
+    );
   });
 
   test(
@@ -109,34 +114,9 @@ void main() {
         await container.read(weatherServiceProvider).fetchWeather(request);
 
     // Assert
-    _expectFailureResult(actual, '不適切なデータを受け取りました');
+    expect(
+      actual,
+      const Result<WeatherData, String>.failure('不適切なデータを受け取りました'),
+    );
   });
-}
-
-void _expectSuccessResult(
-  Result<WeatherData, String> actual,
-  WeatherData expectedValue,
-) {
-  expect(
-    actual,
-    isA<Success<WeatherData, String>>().having(
-      (success) => success.value,
-      'expected weather data',
-      expectedValue,
-    ),
-  );
-}
-
-void _expectFailureResult(
-  Result<WeatherData, String> actual,
-  String expectedExceptionMessage,
-) {
-  expect(
-    actual,
-    isA<Failure<WeatherData, String>>().having(
-      (failure) => failure.exceptionMessage,
-      'expected exception message',
-      expectedExceptionMessage,
-    ),
-  );
 }
